@@ -7,6 +7,7 @@ var roleHarvester = {
       cf.tryHarvest(creep);
       cf.tryStock(creep);
       cf.tryBuild(creep);
+      cf.tryRepair(creep);
       cf.tryUpgrade(creep);
 	    cf.doJob(creep);
 	}

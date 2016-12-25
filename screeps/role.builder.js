@@ -6,7 +6,8 @@ var roleBuilder = {
     run: function(creep) {
       cf.tryHarvest(creep);
       cf.tryBuild(creep);
-      cf.tryStock(creep);      
+      cf.tryRepair(creep);
+      cf.tryStock(creep);
       cf.tryUpgrade(creep);
 	    cf.doJob(creep);
 	}

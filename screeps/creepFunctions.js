@@ -20,6 +20,9 @@ exports.doJob = function(creep){
   else if(creep.memory.job == 'upgrade') {
       exports.upgrade(creep);
   }
+  else if(creep.memory.job == 'repair'){
+    exports.repair(creep)
+  }
 }
 
  exports.harvest = function(creep){
@@ -61,6 +64,26 @@ exports.upgrade = function(creep){
   }
 }
 
+exports.repair = function(creep){
+
+  // var targets = findDamagedStructures(creep);
+  // else if(targets.length) {
+  //     if(creep.repair(targets[0]) == ERR_NOT_IN_RANGE) {
+  //         creep.moveTo(targets[0]);
+  //     }
+  var target = Game.getObjectById(creep.memory.target);
+  if (target == null){
+    target = creep.closestDamagedStructure
+    if (target == null){
+      creep.memory.job = 'harvest';
+      return;
+    }
+  }
+  if (creep.repair(target) == ERR_NOT_IN_RANGE){
+    creep.moveTo(target[0]);
+  }
+}
+
 exports.tryHarvest = function(creep){
   if(!(creep.memory.job == 'harvest') && creep.carry.energy == 0) {
         creep.memory.job = 'harvest';
@@ -90,12 +113,29 @@ exports.tryUpgrade = function(creep){
   creep.say('Upgrading');
 }
 
+exports.tryRepair{
+  if (!(creep.memory.job == 'harvest' && creep.carry.energy == creep.carryCapacity)) return;
+  if (findDamagedStructures(creep).length > 0){
+    creep.memory.job = 'repair';
+    creep.memory.target = findDamagedStructures(creep)[0].id
+    creep.say('Repairing');
+  }
+}
+
 function findStockableStructures(creep){
   return creep.room.find(FIND_STRUCTURES, {
           filter: (structure) => {
               return (structure.structureType == STRUCTURE_EXTENSION ||
                       structure.structureType == STRUCTURE_SPAWN ||
                       structure.structureType == STRUCTURE_TOWER) && structure.energy < structure.energyCapacity;
+          }
+  });
+}
+
+function findDamagedStructures(creep){
+  return creep.room.find(FIND_STRUCTURES, {
+          filter: (structure) => {
+              return (structure.hits < (structure.hitsMax / 3));
           }
   });
 }
