@@ -26,7 +26,6 @@ exports.doJob = function(creep){
 }
 
  exports.harvest = function(creep){
-  //  creep.say('I\'m hungry!');
   var source = creep.pos.findClosestByPath(FIND_SOURCES);
     if(creep.harvest(source) == ERR_NOT_IN_RANGE) {
         creep.moveTo(source);
@@ -34,7 +33,6 @@ exports.doJob = function(creep){
  }
 
 exports.stock = function(creep){
-  // creep.say('feeding energy!');
   var targets = findStockableStructures(creep);
   if(targets.length > 0) {
       if(creep.transfer(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
@@ -46,7 +44,6 @@ exports.stock = function(creep){
 }
 
 exports.build = function(creep){
-  // creep.say('building!');
   var targets = creep.room.find(FIND_CONSTRUCTION_SITES);
     if(targets.length) {
         if(creep.build(targets[0]) == ERR_NOT_IN_RANGE) {
@@ -58,19 +55,12 @@ exports.build = function(creep){
 }
 
 exports.upgrade = function(creep){
-  // creep.say('upgrading!');
   if(creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
       creep.moveTo(creep.room.controller);
   }
 }
 
 exports.repair = function(creep){
-
-  // var targets = findDamagedStructures(creep);
-  // else if(targets.length) {
-  //     if(creep.repair(targets[0]) == ERR_NOT_IN_RANGE) {
-  //         creep.moveTo(targets[0]);
-  //     }
   var target = Game.getObjectById(creep.memory.target);
   if (target == null){
     target = creep.closestDamagedStructure
@@ -113,7 +103,7 @@ exports.tryUpgrade = function(creep){
   creep.say('Upgrading');
 }
 
-exports.tryRepair{
+exports.tryRepair = function(creep){
   if (!(creep.memory.job == 'harvest' && creep.carry.energy == creep.carryCapacity)) return;
   if (findDamagedStructures(creep).length > 0){
     creep.memory.job = 'repair';
