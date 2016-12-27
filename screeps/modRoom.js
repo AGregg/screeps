@@ -37,9 +37,9 @@ function SpawnWorker(room, role){
 		//move 50 energy, reduces fatigue by 2 points per tick
 		//carry 50 energy, can carry 50 resources
 		var energy = room.energyAvailable;
-    if (energy < 500) return;
-		var body = [WORK,CARRY,MOVE];
-		energy = energy - 200;
+    if (energy < 250) return;
+		var body = [WORK,CARRY,CARRY,MOVE];
+		energy = energy - 250;
 		while (energy >= 150){
 			body.push(WORK, MOVE);
 			energy = energy - 150;
