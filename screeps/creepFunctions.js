@@ -30,7 +30,10 @@ exports.doJob = function(creep){
 }
 
  exports.harvest = function(creep){
-  var source = creep.pos.findClosestByPath(FIND_SOURCES);
+  var source = creep.pos.findClosestByPath(FIND_SOURCES, {
+          filter: (src) => {
+              return (src.energy > 0 || src.ticksToRegeneration < 75);
+          });
     if(creep.harvest(source) == ERR_NOT_IN_RANGE) {
         creep.moveTo(source);
     }
