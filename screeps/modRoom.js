@@ -37,7 +37,8 @@ function SpawnWorker(room, role){
 		//move 50 energy, reduces fatigue by 2 points per tick
 		//carry 50 energy, can carry 50 resources
 		var energy = room.energyAvailable;
-    if (energy < 250) return;
+    var goodScreepEnergy = (room.energyCapacityAvailable + 250) / 2
+    if (energy < goodScreepEnergy && CountCreepsWithRole('harvester') > 2) return;
 		var body = [WORK,CARRY,CARRY,MOVE];
 		energy = energy - 250;
 		while (energy >= 150){
