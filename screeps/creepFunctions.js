@@ -126,7 +126,7 @@ function findStockableStructures(creep){
   });
 }
 
-closestStockableStructure(creep){
+function closestStockableStructure(creep){
   return creep.pos.findClosestByRange(FIND_STRUCTURES, {
           filter: (structure) => {
               return (structure.structureType == STRUCTURE_EXTENSION ||
@@ -136,7 +136,7 @@ closestStockableStructure(creep){
   });
 }
 
-closestDamagedStructure(creep){
+function closestDamagedStructure(creep){
   return creep.pos.findClosestByRange(FIND_STRUCTURES, {
       filter: (structure) => structure.hits < structure.hitsMax
   });
