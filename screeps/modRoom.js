@@ -24,6 +24,7 @@ var modRoom = {
           var role = roles[i];
           if(CountCreepsWithRole(role.role) < role.min) {
   	        SpawnWorker(room, role.role);
+            break;
           }
   			}
 	}
