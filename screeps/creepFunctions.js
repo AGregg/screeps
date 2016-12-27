@@ -8,6 +8,7 @@
  */
 
 
+
 exports.doJob = function(creep){
   switch(creep.memory.job){
     case 'harvest':
@@ -36,10 +37,10 @@ exports.doJob = function(creep){
  }
 
 exports.stock = function(creep){
-  var targets = findStockableStructures(creep);
-  if(targets.length > 0) {
-      if(creep.transfer(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-          creep.moveTo(targets[0]);
+  var target = closestStockableStructure(creep);
+  if(target != null) {
+      if(creep.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+          creep.moveTo(target);
       }
   } else {
     creep.memory.job = 'harvest';
@@ -66,7 +67,7 @@ exports.upgrade = function(creep){
 exports.repair = function(creep){
   var target = Game.getObjectById(creep.memory.target);
   if (target == null){
-    target = creep.closestDamagedStructure
+    target = closestDamagedStructure(creep);
     if (target == null){
       creep.memory.job = 'harvest';
       return;
@@ -124,6 +125,23 @@ function findStockableStructures(creep){
           }
   });
 }
+
+closestStockableStructure(creep){
+  return creep.pos.findClosestByRange(FIND_STRUCTURES, {
+          filter: (structure) => {
+              return (structure.structureType == STRUCTURE_EXTENSION ||
+                      structure.structureType == STRUCTURE_SPAWN ||
+                      structure.structureType == STRUCTURE_TOWER) && structure.energy < structure.energyCapacity;
+          }
+  });
+}
+
+closestDamagedStructure(creep){
+  return creep.pos.findClosestByRange(FIND_STRUCTURES, {
+      filter: (structure) => structure.hits < structure.hitsMax
+  });
+}
+
 
 function findDamagedStructures(creep){
   return creep.room.find(FIND_STRUCTURES, {
