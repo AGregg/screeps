@@ -7,21 +7,24 @@
  * mod.thing == 'a thing'; // true
  */
 
+
 exports.doJob = function(creep){
-  if(creep.memory.job == 'harvest') {
+  switch(creep.memory.job){
+    case 'harvest':
       exports.harvest(creep);
-  }
-  else if(creep.memory.job == 'stock') {
+      break;
+    case 'stock':
       exports.stock(creep);
-  }
-  else if(creep.memory.job == 'build') {
+      break;
+    case 'build':
       exports.build(creep);
-  }
-  else if(creep.memory.job == 'upgrade') {
+      break;
+    case 'upgrade':
       exports.upgrade(creep);
-  }
-  else if(creep.memory.job == 'repair'){
-    exports.repair(creep)
+      break;
+    case 'repair':
+      exports.repair(creep);
+      break;
   }
 }
 
