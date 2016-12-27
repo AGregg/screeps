@@ -30,10 +30,7 @@ exports.doJob = function(creep){
 }
 
  exports.harvest = function(creep){
-  var source = creep.pos.findClosestByPath(FIND_SOURCES, {
-          filter: (src) => {
-              return (src.energy > 0 || src.ticksToRegeneration < 75); }
-          });
+  var source = closestNonEmptySource(creep);
     if(creep.harvest(source) == ERR_NOT_IN_RANGE) {
         creep.moveTo(source);
     }
@@ -145,6 +142,12 @@ function closestDamagedStructure(creep){
   });
 }
 
+function closestNonEmptySource(creep){
+  creep.pos.findClosestByPath(FIND_SOURCES, {
+          filter: (src) => {
+              return (src.energy > 0 || src.ticksToRegeneration < 75); }
+          });
+}
 
 function findDamagedStructures(creep){
   return creep.room.find(FIND_STRUCTURES, {
