@@ -143,7 +143,7 @@ function closestDamagedStructure(creep){
 }
 
 function closestNonEmptySource(creep){
-  creep.pos.findClosestByPath(FIND_SOURCES, {
+  return creep.pos.findClosestByPath(FIND_SOURCES, {
           filter: (src) => {
               return (src.energy > 0 || src.ticksToRegeneration < 75); }
           });
