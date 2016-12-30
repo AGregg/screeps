@@ -62,6 +62,7 @@ function ActivateSafeMode(room){
 	var hostiles = room.find(FIND_HOSTILE_CREEPS);
 	if (hostiles.length > 0 && room.controller.safeMode == undefined){
 		room.controller.activateSafeMode();
+    Game.notify('Safe mode activated!  Hostiles detected!' + JSON.stringify(hostiles));
 	}
 }
 
