@@ -14,7 +14,7 @@ var modRoom = {
       ActivateSafeMode(room);
 
       for(let role of Roles()){
-          if(CountCreepsWithRole(role.role) < role.min) {
+          if(CountCreepsWithRole(role.role) < role.min(room)) {
   	        SpawnWorker(room, role);
             break;
           }
@@ -29,7 +29,7 @@ function* Roles(){
   yield {
     role:'harvester',
     caste:'worker',
-    min:5,
+    min: function(room){ return 5; },
     idealSpawnCost: function(room){
       if (CountCreepsWithRole('harvester') < 2) room.energyAvailable;
       else return (room.energyCapacityAvailable + 250) / 2;
@@ -38,17 +38,25 @@ function* Roles(){
     bodyAdd: [WORK, MOVE]
   };
   yield {
+    role:'miner',
+    caste:'worker',
+    min: function(room){ return Storages(room).length; },
+    idealSpawnCost: function(room) { return CalculateBodyCost([WORK, WORK, WORK, WORK, WORK, MOVE]); },
+    body: [WORK, WORK, WORK, WORK, WORK, MOVE],
+    bodyAdd: [MOVE]
+  };
+  yield {
     role:'upgrader',
     caste:'worker',
-    min:2,
-    idealSpawnCost: function(room){ return (room.energyCapacityAvailable + 250) / 2; },    
+    min: function(room){ return 2; },
+    idealSpawnCost: function(room){ return (room.energyCapacityAvailable + 250) / 2; },
     body: [WORK, CARRY, CARRY, MOVE],
     bodyAdd: [WORK, MOVE]
   };
   yield {
     role:'builder',
     caste:'worker',
-    min:1,
+    min: function(room){ return 1; },
     idealSpawnCost: function(room){ return (room.energyCapacityAvailable + 250) / 2; },
     body: [WORK, CARRY, CARRY, MOVE],
     bodyAdd: [WORK, MOVE]
@@ -94,8 +102,13 @@ function CountCreepsWithRole(role){
     return _.filter(Game.creeps, (creep) => creep.memory.role == role).length;
 }
 
-function CountCreepsWithCaste(caste){
-	return _.filter(Game.creeps, (creep) => creep.memory.caste == caste).length;
+function Storages(room){
+  return room.find(FIND_STRUCTURES, {
+          filter: (structure) => {
+              return (structure.structureType == STRUCTURE_STORAGE ||
+                      structure.structureType == STRUCTURE_CONTAINER);
+          }
+  });
 }
 
 function ActivateSafeMode(room){
