@@ -30,7 +30,10 @@ function* Roles(){
     role:'harvester',
     caste:'worker',
     min:5,
-    idealSpawnCost: function(room){ return (room.energyCapacityAvailable + 250) / 2; },
+    idealSpawnCost: function(room){
+      if (CountCreepsWithRole('harvester') < 2) room.energyAvailable;
+      else return (room.energyCapacityAvailable + 250) / 2;
+    },
     body: [WORK, CARRY, CARRY, MOVE],
     bodyAdd: [WORK, MOVE]
   };
@@ -38,11 +41,7 @@ function* Roles(){
     role:'upgrader',
     caste:'worker',
     min:2,
-    idealSpawnCost: function(room)
-    {
-      if (CountCreepsWithRole('harvester') < 2) room.energyAvailable;
-      else return (room.energyCapacityAvailable + 250) / 2;
-    },
+    idealSpawnCost: function(room){ return (room.energyCapacityAvailable + 250) / 2; },    
     body: [WORK, CARRY, CARRY, MOVE],
     bodyAdd: [WORK, MOVE]
   };
