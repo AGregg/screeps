@@ -66,7 +66,7 @@ function SpawnWorker(room, role){
     var bodyAddCost = CalculateBodyCost(bodyAdd);
 
 		while (spawnCost + bodyAddCost < idealSpawnCost){
-			body.concat(bodyAdd);
+			Array.prototype.push.apply(body, bodyAdd);
       spawnCost += bodyAddCost;
 		}
 
