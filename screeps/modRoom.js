@@ -32,7 +32,8 @@ function* Roles(){
     min:5,
     idealSpawnCost: function(){ return (room.energyCapacityAvailable + 250) / 2; },
     body: [WORK, CARRY, CARRY, MOVE],
-    bodyAdd: [WORK, MOVE]};
+    bodyAdd: [WORK, MOVE]
+  };
   yield {
     role:'upgrader',
     caste:'worker',
@@ -43,14 +44,16 @@ function* Roles(){
       else return (room.energyCapacityAvailable + 250) / 2;
     },
     body: [WORK, CARRY, CARRY, MOVE],
-    bodyAdd: [WORK, MOVE]};
+    bodyAdd: [WORK, MOVE]
+  };
   yield {
     role:'builder',
     caste:'worker',
     min:1,
     idealSpawnCost: function(){ return (room.energyCapacityAvailable + 250) / 2; },
     body: [WORK, CARRY, CARRY, MOVE],
-    bodyAdd: [WORK, MOVE]};
+    bodyAdd: [WORK, MOVE]
+  };
 }
 
 function SpawnWorker(room, role){
