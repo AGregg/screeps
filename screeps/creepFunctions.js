@@ -74,7 +74,7 @@ exports.repair = function(creep){
     }
   }
   if (creep.repair(target) == ERR_NOT_IN_RANGE){
-    creep.moveTo(target[0]);
+    creep.moveTo(target);
   }
 }
 
