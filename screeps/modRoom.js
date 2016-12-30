@@ -11,6 +11,7 @@ var modRoom = {
 
     /** @param {Creep} creep **/
     run: function(room) {
+      DefendRoom(room);
       ActivateSafeMode(room);
 
       for(let role of Roles()){
@@ -109,24 +110,19 @@ function Storages(room){
 
 function ActivateSafeMode(room){
 	var hostiles = room.find(FIND_HOSTILE_CREEPS);
-	if (hostiles.length > 0 && room.controller.safeMode == undefined){
+  var towers = room.find(FIND_MY_STRUCTURES, {filter: {structureType: STRUCTURE_TOWER}});
+  var spawn = room.find(FIND_MY_SPAWNS)[0];
+	if (hostiles.length > 0 && (towers.length == 0 || spawn.hits < spawn.hitsMax) && room.controller.safeMode == undefined){
 		room.controller.activateSafeMode();
-    Game.notify('Safe mode activated!  Hostiles detected!' + JSON.stringify(hostiles));
+    Game.notify('Safe mode activated!');
 	}
 }
 
+function DefendRoom(room){
+  var hostiles = room.find(FIND_HOSTILE_CREEPS);
 
-// var tower = Game.getObjectById('5586a08254d9045c17ddf50b');
-// if(tower) {
-    // var closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {
-        // filter: (structure) => structure.hits < structure.hitsMax
-    // });
-    // if(closestDamagedStructure) {
-        // tower.repair(closestDamagedStructure);
-    // }
-
-    // var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
-    // if(closestHostile) {
-        // tower.attack(closestHostile);
-    // }
-// }
+  if(hostiles.length > 0) {
+      var towers = room.find(FIND_MY_STRUCTURES, {filter: {structureType: STRUCTURE_TOWER}});
+      towers.forEach(tower => tower.attack(tower.pos.findInRange(FIND_HOSTILE_CREEPS, 15)[0]));
+  }
+}
