@@ -66,7 +66,7 @@ exports.upgrade = function(creep){
 
 exports.repair = function(creep){
   var target = Game.getObjectById(creep.memory.target);
-  if (target == null){
+  if (target == null || target.hits == target.hitsMax){
     target = closestDamagedStructure(creep);
     if (target == null){
       creep.memory.job = 'harvest';
