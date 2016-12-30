@@ -51,7 +51,6 @@ function* Roles(){
     idealSpawnCost: function(){ return (room.energyCapacityAvailable + 250) / 2; },
     body: [WORK, CARRY, CARRY, MOVE],
     bodyAdd: [WORK, MOVE]};
-  };
 }
 
 function SpawnWorker(room, role){
