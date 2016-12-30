@@ -31,7 +31,7 @@ exports.doJob = function(creep){
 
  exports.harvest = function(creep){
   var source = closestNonEmptySource(creep);
-    if(creep.harvest(source) == ERR_NOT_IN_RANGE) {
+    if([ERR_NOT_IN_RANGE, ERR_NOT_ENOUGH_RESOURCES].indexOf(creep.harvest(source)) > -1) {
         creep.moveTo(source);
     }
  }
