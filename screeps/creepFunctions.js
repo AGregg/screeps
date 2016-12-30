@@ -165,11 +165,11 @@ function closestNonEmptySource(creep){
 }
 
 function closestNonEmptyStorage(creep){
-  creep.pos.findClosestByRange(FIND_STRUCTURES, {
-          filter: (structure) => {
-              return (structure.structureType == STRUCTURE_STORAGE ||
-                      structure.structureType == STRUCTURE_CONTAINER) && structure.energy > 0;
-          }
+  return creep.pos.findClosestByRange(FIND_STRUCTURES, {
+        filter: (structure) => {
+            return (structure.structureType == STRUCTURE_STORAGE ||
+                    structure.structureType == STRUCTURE_CONTAINER) && structure.energy > 0;
+        }
   })
 }
 
