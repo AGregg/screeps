@@ -30,7 +30,7 @@ function* Roles(){
     role:'harvester',
     caste:'worker',
     min:5,
-    idealSpawnCost: function(){ return (room.energyCapacityAvailable + 250) / 2; },
+    idealSpawnCost: function(room){ return (room.energyCapacityAvailable + 250) / 2; },
     body: [WORK, CARRY, CARRY, MOVE],
     bodyAdd: [WORK, MOVE]
   };
@@ -38,7 +38,7 @@ function* Roles(){
     role:'upgrader',
     caste:'worker',
     min:2,
-    idealSpawnCost: function()
+    idealSpawnCost: function(room)
     {
       if (CountCreepsWithRole('harvester') < 2) room.energyAvailable;
       else return (room.energyCapacityAvailable + 250) / 2;
@@ -50,7 +50,7 @@ function* Roles(){
     role:'builder',
     caste:'worker',
     min:1,
-    idealSpawnCost: function(){ return (room.energyCapacityAvailable + 250) / 2; },
+    idealSpawnCost: function(room){ return (room.energyCapacityAvailable + 250) / 2; },
     body: [WORK, CARRY, CARRY, MOVE],
     bodyAdd: [WORK, MOVE]
   };
@@ -58,7 +58,7 @@ function* Roles(){
 
 function SpawnWorker(room, role){
     var energyAvailable = room.EnergyAvailable;
-		var idealSpawnCost = role.idealSpawnCost();
+		var idealSpawnCost = role.idealSpawnCost(room);
     if (energyAvailable < idealSpawnCost) return;
     var body = role.body;
     var bodyAdd = role.bodyAdd;
