@@ -28,7 +28,6 @@ function* Roles(){
   //order here determines spawning priority
   yield {
     role:'harvester',
-    caste:'worker',
     min: function(room){ return 5; },
     idealSpawnCost: function(room){
       if (CountCreepsWithRole('harvester') < 2) room.energyAvailable;
@@ -39,7 +38,6 @@ function* Roles(){
   };
   yield {
     role:'miner',
-    caste:'worker',
     min: function(room){ return Storages(room).length; },
     idealSpawnCost: function(room) { return CalculateBodyCost([WORK, WORK, WORK, WORK, WORK, MOVE]); },
     body: [WORK, WORK, WORK, WORK, WORK, MOVE],
@@ -47,7 +45,6 @@ function* Roles(){
   };
   yield {
     role:'upgrader',
-    caste:'worker',
     min: function(room){ return 2; },
     idealSpawnCost: function(room){ return (room.energyCapacityAvailable + 250) / 2; },
     body: [WORK, CARRY, CARRY, MOVE],
@@ -55,7 +52,6 @@ function* Roles(){
   };
   yield {
     role:'builder',
-    caste:'worker',
     min: function(room){ return 1; },
     idealSpawnCost: function(room){ return (room.energyCapacityAvailable + 250) / 2; },
     body: [WORK, CARRY, CARRY, MOVE],
@@ -77,7 +73,7 @@ function SpawnWorker(room, role){
       spawnCost += bodyAddCost;
 		}
 
-    var newName = room.find(FIND_MY_SPAWNS)[0].createCreep(body, undefined, {role: role.role, caste: 'worker' } );
+    var newName = room.find(FIND_MY_SPAWNS)[0].createCreep(body, undefined, {role: role.role } );
     console.log('Spawning new ' + role + ': ' + newName);
 }
 
