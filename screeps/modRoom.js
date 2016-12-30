@@ -13,41 +13,80 @@ var modRoom = {
     run: function(room) {
       ActivateSafeMode(room);
 
-  		//creep types
-  		var harvester = { role:'harvester', caste:'worker', min:5 };
-  		var upgrader = { role:'upgrader', caste:'worker', min:2 };
-  		var builder = { role:'builder', caste:'worker', min:1 };
-
-  		var roles = [harvester, upgrader, builder];
-
-      for(var i in roles){
-          var role = roles[i];
+      for(let role of Roles()){
           if(CountCreepsWithRole(role.role) < role.min) {
-  	        SpawnWorker(room, role.role);
+  	        SpawnWorker(room, role);
             break;
           }
-  			}
+  		}
 	}
 };
 
 module.exports = modRoom;
 
+function* Roles(){
+  //order here determines spawning priority
+  yield {
+    role:'harvester',
+    caste:'worker',
+    min:5,
+    idealSpawnCost: function(){ return (room.energyCapacityAvailable + 250) / 2; },
+    body: [WORK, CARRY, CARRY, MOVE],
+    bodyAdd: [WORK, MOVE]};
+  yield {
+    role:'upgrader',
+    caste:'worker',
+    min:2,
+    idealSpawnCost: function()
+    {
+      if (CountCreepsWithRole('harvester') < 2) room.energyAvailable;
+      else return (room.energyCapacityAvailable + 250) / 2;
+    },
+    body: [WORK, CARRY, CARRY, MOVE],
+    bodyAdd: [WORK, MOVE]};
+  yield {
+    role:'builder',
+    caste:'worker',
+    min:1,
+    idealSpawnCost: function(){ return (room.energyCapacityAvailable + 250) / 2; },
+    body: [WORK, CARRY, CARRY, MOVE],
+    bodyAdd: [WORK, MOVE]};
+  };
+}
+
 function SpawnWorker(room, role){
-		//work 100 energy, ability to harvest, build, repair, dismantle, upgrade
-		//move 50 energy, reduces fatigue by 2 points per tick
-		//carry 50 energy, can carry 50 resources
-		var energy = room.energyAvailable;
-    var goodScreepEnergy = (room.energyCapacityAvailable + 250) / 2
-    if (energy < goodScreepEnergy && CountCreepsWithRole('harvester') > 2) return;
-		var body = [WORK,CARRY,CARRY,MOVE];
-		energy = energy - 250;
-		while (energy >= 150){
-			body.push(WORK, MOVE);
-			energy = energy - 150;
+    var energyAvailable = room.EnergyAvailable;
+		var idealSpawnCost = role.idealSpawnCost();
+    if (energyAvailable < idealSpawnCost) return;
+    var body = role.body;
+    var bodyAdd = role.bodyAdd;
+    var spawnCost = CalculateBodyCost(body);
+    var bodyAddCost = CalculateBodyCost(bodyAdd);
+
+		while (spawnCost + bodyAddCost < idealSpawnCost){
+			body.concat(bodyAdd);
+      spawnCost += bodyAddCost;
 		}
 
-    var newName = room.find(FIND_MY_SPAWNS)[0].createCreep(body, undefined, {role: role, caste: 'worker' } );
+    var newName = room.find(FIND_MY_SPAWNS)[0].createCreep(body, undefined, {role: role.role, caste: 'worker' } );
     console.log('Spawning new ' + role + ': ' + newName);
+}
+
+function CalculateBodyCost(body){
+  var _ = require("lodash");
+  var bodyCost = {
+    "move": 50,
+    "work": 100,
+    "carry": 50,
+    "attack": 80,
+    "ranged_attack": 150,
+    "heal": 250,
+    "claim": 600,
+    "tough": 10
+  };
+  var cost = 0;
+  _.forEach(body, function(part) { cost += bodyCost[part]; });
+  return cost;
 }
 
 function CountCreepsWithRole(role){
