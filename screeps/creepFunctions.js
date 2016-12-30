@@ -30,9 +30,17 @@ exports.doJob = function(creep){
 }
 
  exports.harvest = function(creep){
-  var source = closestNonEmptySource(creep);
-    if(creep.harvest(source) == ERR_NOT_IN_RANGE) {
-        creep.moveTo(source);
+  var storage = closestNonEmptyStorage(creep);
+  if (storage != null){
+    if(creep.withdraw(storage, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+	     creep.moveTo(storage);
+     }
+  }
+  else {
+    var source = closestNonEmptySource(creep);
+      if(creep.harvest(source) == ERR_NOT_IN_RANGE) {
+          creep.moveTo(source);
+      }
     }
  }
 
@@ -76,6 +84,13 @@ exports.repair = function(creep){
   if (creep.repair(target) == ERR_NOT_IN_RANGE){
     creep.moveTo(target);
   }
+}
+
+exports.mine = function(creep){
+  if (creep.memory.storage == null) creep.memory.storage = assignStorage(creep);
+  storage = Game.getObjectById(creep.memory.storage);
+  creep.moveTo(storage);
+  creep.harvest(closestNonEmptySource(creep));
 }
 
 exports.tryHarvest = function(creep){
@@ -149,10 +164,30 @@ function closestNonEmptySource(creep){
           });
 }
 
+function closestNonEmptyStorage(creep){
+  creep.room.findClosestByRange(FIND_STRUCTURES, {
+          filter: (structure) => {
+              return (structure.structureType == STRUCTURE_STORAGE ||
+                      structure.structureType == STRUCTURE_CONTAINER) && structure.energy > 0;
+          }
+  })
+}
+
 function findDamagedStructures(creep){
   return creep.room.find(FIND_STRUCTURES, {
           filter: (structure) => {
               return (structure.hits < (structure.hitsMax / 3));
           }
   });
+}
+
+function assignStorage(creep){
+  // var _ = require("lodash");
+  var claimedStorages = _.map(_.map(creep.room.find(FIND_MY_CREEPS), 'memory'), 'storage');
+  return creep.room.find(FIND_STRUCTURES, {
+          filter: (structure) => {
+              return (structure.structureType == STRUCTURE_STORAGE ||
+                      structure.structureType == STRUCTURE_CONTAINER) && [claimedStorages].indexOf(structure.id) == -1;
+          }
+  })[0].id;
 }

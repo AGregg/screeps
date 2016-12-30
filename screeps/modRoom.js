@@ -78,7 +78,7 @@ function SpawnWorker(room, role){
 }
 
 function CalculateBodyCost(body){
-  var _ = require("lodash");
+  // var _ = require("lodash");
   var bodyCost = {
     "move": 50,
     "work": 100,
